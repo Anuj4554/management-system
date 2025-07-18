@@ -4,6 +4,11 @@ import os
 from datetime import datetime
 
 app = Flask(__name__, static_folder='.', static_url_path='')
+from flask import Flask
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
 
 # Path to the SQLite database file
 DATABASE = 'database.db'
