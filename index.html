@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDS Management System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font and general body styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex-grow: 1; /* Allows container to grow and fill available space */
+        }
+        h1, h2 {
+            color: #1a202c; /* Darker heading color */
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="password"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            box-sizing: border-box; /* Ensures padding doesn't increase width */
+            font-size: 1rem;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+        }
+        .btn-primary {
+            background-color: #4c51bf; /* Indigo */
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #434190;
+        }
+        .btn-secondary {
+            background-color: #6b7280; /* Gray */
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+        .btn-danger {
+            background-color: #dc2626; /* Red */
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #b91c1c;
+        }
+        .table-container {
+            overflow-x: auto; /* Enable horizontal scrolling for tables on small screens */
+            margin-top: 1.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+            overflow: hidden; /* Ensures rounded corners apply to table */
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0; /* Light gray border */
+        }
+        th {
+            background-color: #edf2f7; /* Lighter gray for table header */
+            font-weight: 600;
+            color: #2d3748;
+        }
+        tr:hover {
+            background-color: #f7fafc; /* Very light gray on hover */
+        }
+        .message-box {
+            background-color: #d1fae5; /* Light green for success */
+            color: #065f46; /* Dark green text */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #34d399;
+            display: none; /* Hidden by default */
+        }
+        .error-box {
+            background-color: #fee2e2; /* Light red for error */
+            color: #991b1b; /* Dark red text */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ef4444;
+            display: none; /* Hidden by default */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+            .grid-cols-2 {
+                grid-template-columns: 1fr; /* Stack columns on small screens */
+            }
+            .flex-col-reverse {
+                flex-direction: column-reverse; /* Reverse order for better flow on mobile */
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+
+    <!-- Login/Register Section -->
+    <div id="auth-section" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+            <div class="flex justify-center mb-6">
+                <button id="showLoginBtn" class="px-6 py-2 rounded-l-lg font-semibold text-lg border border-r-0 border-gray-300 bg-indigo-500 text-white">Login</button>
+                <button id="showRegisterBtn" class="px-6 py-2 rounded-r-lg font-semibold text-lg border border-l-0 border-gray-300 text-gray-700 bg-gray-100">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form-container">
+                <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Login to AIDS System</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUsername">Username:</label>
+                        <input type="text" id="loginUsername" required class="w-full p-3 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password:</label>
+                        <input type="password" id="loginPassword" required class="w-full p-3 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div id="loginMessageBox" class="message-box !bg-blue-100 !text-blue-800 !border-blue-300"></div>
+                    <div id="loginErrorBox" class="error-box"></div>
+                    <button type="submit" class="btn btn-primary w-full mt-4">Login</button>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form-container" class="hidden">
+                <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Register for AIDS System</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerUsername">Username:</label>
+                        <input type="text" id="registerUsername" required class="w-full p-3 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password:</label>
+                        <input type="password" id="registerPassword" required class="w-full p-3 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password:</label>
+                        <input type="password" id="confirmPassword" required class="w-full p-3 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div id="registerMessageBox" class="message-box !bg-blue-100 !text-blue-800 !border-blue-300"></div>
+                    <div id="registerErrorBox" class="error-box"></div>
+                    <button type="submit" class="btn btn-primary w-full mt-4">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application Content -->
+    <div id="app-content" class="container hidden">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold">AIDS Management System</h1>
+            <button id="logoutButton" class="btn btn-secondary">Logout</button>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex border-b border-gray-200 mb-6">
+            <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700 hover:text-indigo-600 focus:outline-none border-b-2 border-transparent hover:border-indigo-500 active-tab" data-tab="products">Product Management</button>
+            <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700 hover:text-indigo-600 focus:outline-none border-b-2 border-transparent hover:border-indigo-500" data-tab="inventory">Inventory Management</button>
+            <button class="tab-button px-4 py-2 text-lg font-medium text-gray-700 hover:text-indigo-600 focus:outline-none border-b-2 border-transparent hover:border-indigo-500" data-tab="billing">Billing System</button>
+        </div>
+
+        <!-- Message Boxes -->
+        <div id="messageBox" class="message-box"></div>
+        <div id="errorBox" class="error-box"></div>
+
+        <!-- Product Management Section -->
+        <div id="products-section" class="tab-content">
+            <h2 class="text-2xl font-semibold mb-4">Product Management</h2>
+
+            <form id="productForm" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-6">
+                <input type="hidden" id="productId">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label for="productName">Product Name:</label>
+                        <input type="text" id="productName" required class="w-full p-2 border rounded-md">
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price:</label>
+                        <input type="number" id="productPrice" step="0.01" min="0" required class="w-full p-2 border rounded-md">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Description:</label>
+                    <textarea id="productDescription" rows="3" class="w-full p-2 border rounded-md"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="productInitialQuantity">Initial Quantity (for new product):</label>
+                    <input type="number" id="productInitialQuantity" min="0" value="0" class="w-full p-2 border rounded-md">
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="submit" class="btn btn-primary">Add/Update Product</button>
+                    <button type="button" id="clearProductForm" class="btn btn-secondary">Clear Form</button>
+                </div>
+            </form>
+
+            <div class="table-container">
+                <h3 class="text-xl font-semibold mb-3">Existing Products</h3>
+                <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <!-- Products will be loaded here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Inventory Management Section -->
+        <div id="inventory-section" class="tab-content hidden">
+            <h2 class="text-2xl font-semibold mb-4">Inventory Management</h2>
+
+            <form id="inventoryForm" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label for="inventoryProductId">Product:</label>
+                        <select id="inventoryProductId" required class="w-full p-2 border rounded-md">
+                            <option value="">Select a product</option>
+                            <!-- Products will be loaded here -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inventoryBatchNumber">Batch Number:</label>
+                        <input type="text" id="inventoryBatchNumber" required class="w-full p-2 border rounded-md">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inventoryQuantity">Quantity to Add/Remove:</label>
+                    <input type="number" id="inventoryQuantity" min="1" required class="w-full p-2 border rounded-md">
+                    <p class="text-sm text-gray-500 mt-1">Enter a positive number to add stock to a batch. If the batch exists, quantity will be added. If not, a new batch will be created.</p>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="btn btn-primary">Update Inventory</button>
+                </div>
+            </form>
+
+            <div class="table-container">
+                <h3 class="text-xl font-semibold mb-3">Current Inventory</h3>
+                <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product Name</th>
+                            <th>Batch Number</th>
+                            <th>Quantity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody">
+                        <!-- Inventory will be loaded here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Billing System Section -->
+        <div id="billing-section" class="tab-content hidden">
+            <h2 class="text-2xl font-semibold mb-4">Billing System</h2>
+
+            <form id="billingForm" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-6">
+                <div class="form-group">
+                    <label for="customerName">Customer Name:</label>
+                    <input type="text" id="customerName" required class="w-full p-2 border rounded-md">
+                </div>
+
+                <h3 class="text-xl font-semibold mb-3 mt-4">Add Items to Bill</h3>
+                <div id="billItemsContainer">
+                    <!-- Bill items will be added here dynamically -->
+                    <div class="flex flex-col md:flex-row gap-4 mb-4 bill-item">
+                        <div class="w-full md:w-3/5">
+                            <label for="billProduct0" class="sr-only">Product</label>
+                            <select id="billProduct0" class="w-full p-2 border rounded-md bill-product-select" data-item-index="0" required>
+                                <option value="">Select Product</option>
+                                <!-- Products loaded here -->
+                            </select>
+                        </div>
+                        <div class="w-full md:w-1/5">
+                            <label for="billQuantity0" class="sr-only">Quantity</label>
+                            <input type="number" id="billQuantity0" min="1" value="1" class="w-full p-2 border rounded-md bill-quantity-input" data-item-index="0" required>
+                        </div>
+                        <div class="w-full md:w-1/5 flex items-center justify-end">
+                            <button type="button" class="btn btn-danger remove-item-btn" data-item-index="0" disabled>Remove</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" id="addBillItem" class="btn btn-secondary mb-4">Add Another Item</button>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label for="billDiscount">Discount (%):</label>
+                        <input type="number" id="billDiscount" step="0.01" min="0" max="1" value="0" class="w-full p-2 border rounded-md">
+                        <p class="text-sm text-gray-500 mt-1">Enter as a decimal (e.g., 0.10 for 10%)</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="billTaxRate">Tax Rate (%):</label>
+                        <input type="number" id="billTaxRate" step="0.01" min="0" value="0" class="w-full p-2 border rounded-md">
+                        <p class="text-sm text-gray-500 mt-1">Enter as a decimal (e.g., 0.05 for 5%)</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="btn btn-primary">Generate Bill</button>
+                </div>
+            </form>
+
+            <div class="table-container">
+                <h3 class="text-xl font-semibold mb-3">Recent Bills</h3>
+                <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                    <thead>
+                        <tr>
+                            <th>Bill ID</th>
+                            <th>Customer Name</th>
+                            <th>Date</th>
+                            <th>Total Amount</th>
+                            <th>Discount</th>
+                            <th>Tax</th>
+                            <th>Items</th>
+                        </tr>
+                    </thead>
+                    <tbody id="billsTableBody">
+                        <!-- Bills will be loaded here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://127.0.0.1:5000'; // Ensure this matches your Flask server address
+
+        // DOM Elements for Auth
+        const authSection = document.getElementById('auth-section');
+        const appContent = document.getElementById('app-content');
+        const showLoginBtn = document.getElementById('showLoginBtn');
+        const showRegisterBtn = document.getElementById('showRegisterBtn');
+        const loginFormContainer = document.getElementById('login-form-container');
+        const registerFormContainer = document.getElementById('register-form-container');
+
+        const loginForm = document.getElementById('loginForm');
+        const loginUsernameInput = document.getElementById('loginUsername');
+        const loginPasswordInput = document.getElementById('loginPassword');
+        const loginMessageBox = document.getElementById('loginMessageBox');
+        const loginErrorBox = document.getElementById('loginErrorBox');
+
+        const registerForm = document.getElementById('registerForm');
+        const registerUsernameInput = document.getElementById('registerUsername');
+        const registerPasswordInput = document.getElementById('registerPassword');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const registerMessageBox = document.getElementById('registerMessageBox');
+        const registerErrorBox = document.getElementById('registerErrorBox');
+
+        const logoutButton = document.getElementById('logoutButton');
+
+        // General Message Boxes for App Content
+        const messageBox = document.getElementById('messageBox');
+        const errorBox = document.getElementById('errorBox');
+
+        // Tab Management
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // --- Authentication Logic ---
+        const AUTH_KEY = 'isLoggedIn'; // Store login status in session storage
+
+        function showAuthMessage(message, type = 'success', targetBox) {
+            targetBox.style.display = 'none'; // Hide previous messages in this box
+            const box = targetBox;
+            box.textContent = message;
+            box.classList.remove('!bg-blue-100', '!text-blue-800', '!border-blue-300', 'bg-red-100', 'text-red-800', 'border-red-300', 'bg-green-100', 'text-green-800', 'border-green-300');
+
+            if (type === 'success') {
+                box.classList.add('bg-green-100', 'text-green-800', 'border-green-300');
+            } else if (type === 'error') {
+                box.classList.add('bg-red-100', 'text-red-800', 'border-red-300');
+            } else if (type === 'info') {
+                 box.classList.add('!bg-blue-100', '!text-blue-800', '!border-blue-300');
+            }
+            box.style.display = 'block';
+            setTimeout(() => {
+                box.style.display = 'none';
+            }, 5000);
+        }
+
+        function hideAuthMessages() {
+            loginMessageBox.style.display = 'none';
+            loginErrorBox.style.display = 'none';
+            registerMessageBox.style.display = 'none';
+            registerErrorBox.style.display = 'none';
+        }
+
+        function showLoginForm() {
+            loginFormContainer.classList.remove('hidden');
+            registerFormContainer.classList.add('hidden');
+            showLoginBtn.classList.add('bg-indigo-500', 'text-white');
+            showLoginBtn.classList.remove('bg-gray-100', 'text-gray-700');
+            showRegisterBtn.classList.add('bg-gray-100', 'text-gray-700');
+            showRegisterBtn.classList.remove('bg-indigo-500', 'text-white');
+            hideAuthMessages();
+        }
+
+        function showRegisterForm() {
+            registerFormContainer.classList.remove('hidden');
+            loginFormContainer.classList.add('hidden');
+            showRegisterBtn.classList.add('bg-indigo-500', 'text-white');
+            showRegisterBtn.classList.remove('bg-gray-100', 'text-gray-700');
+            showLoginBtn.classList.add('bg-gray-100', 'text-gray-700');
+            showLoginBtn.classList.remove('bg-indigo-500', 'text-white');
+            hideAuthMessages();
+        }
+
+        function checkLoginStatus() {
+            if (sessionStorage.getItem(AUTH_KEY) === 'true') {
+                authSection.classList.add('hidden');
+                appContent.classList.remove('hidden');
+                // Load initial data for the default tab
+                document.querySelector('.tab-button').click();
+            } else {
+                authSection.classList.remove('hidden');
+                appContent.classList.add('hidden');
+                showLoginForm(); // Default to login form if not logged in
+            }
+        }
+
+        // Event listeners for showing login/register forms
+        showLoginBtn.addEventListener('click', showLoginForm);
+        showRegisterBtn.addEventListener('click', showRegisterForm);
+
+        // Handle Login Form Submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAuthMessages();
+            const username = loginUsernameInput.value;
+            const password = loginPasswordInput.value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    sessionStorage.setItem(AUTH_KEY, 'true');
+                    showAuthMessage(result.message, 'success', loginMessageBox);
+                    setTimeout(checkLoginStatus, 1000); // Delay to show message
+                } else {
+                    showAuthMessage(result.error || 'Login failed.', 'error', loginErrorBox);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showAuthMessage('Failed to connect to the server.', 'error', loginErrorBox);
+            }
+        });
+
+        // Handle Register Form Submission
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAuthMessages();
+            const username = registerUsernameInput.value;
+            const password = registerPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (password !== confirmPassword) {
+                showAuthMessage('Passwords do not match.', 'error', registerErrorBox);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAuthMessage(result.message + ' You can now log in.', 'success', registerMessageBox);
+                    registerForm.reset();
+                    setTimeout(showLoginForm, 2000); // Switch to login form after successful registration
+                } else {
+                    showAuthMessage(result.error || 'Registration failed.', 'error', registerErrorBox);
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showAuthMessage('Failed to connect to the server.', 'error', registerErrorBox);
+            }
+        });
+
+        logoutButton.addEventListener('click', () => {
+            sessionStorage.removeItem(AUTH_KEY);
+            showAuthMessage('Logged out successfully.', 'info', loginMessageBox); // Use loginMessageBox for logout message
+            checkLoginStatus();
+        });
+
+        // --- End Authentication Logic ---
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetTab = button.dataset.tab;
+
+                tabButtons.forEach(btn => btn.classList.remove('active-tab', 'border-indigo-500', 'text-indigo-600'));
+                tabButtons.forEach(btn => btn.classList.add('border-transparent', 'text-gray-700', 'hover:border-indigo-500'));
+                button.classList.add('active-tab', 'border-indigo-500', 'text-indigo-600');
+                button.classList.remove('border-transparent', 'text-gray-700');
+
+                tabContents.forEach(content => content.classList.add('hidden'));
+                document.getElementById(`${targetTab}-section`).classList.remove('hidden');
+
+                // Load data for the active tab
+                if (targetTab === 'products') {
+                    fetchProducts();
+                } else if (targetTab === 'inventory') {
+                    fetchProductsForInventory(); // Fetch products for dropdown
+                    fetchInventory();
+                } else if (targetTab === 'billing') {
+                    fetchProductsForBilling(); // Fetch products for billing dropdown
+                    fetchBills();
+                }
+                showMessage('', 'success'); // Clear general messages when switching tabs
+            });
+        });
+
+        // Function to show general app messages
+        function showMessage(message, type = 'success') {
+            messageBox.style.display = 'none';
+            errorBox.style.display = 'none';
+
+            const box = type === 'success' ? messageBox : errorBox;
+            box.textContent = message;
+            box.style.display = 'block';
+            setTimeout(() => {
+                box.style.display = 'none';
+            }, 5000); // Hide after 5 seconds
+        }
+
+
+        // --- Product Management ---
+        const productForm = document.getElementById('productForm');
+        const productIdInput = document.getElementById('productId');
+        const productNameInput = document.getElementById('productName');
+        const productDescriptionInput = document.getElementById('productDescription');
+        const productPriceInput = document.getElementById('productPrice');
+        const productInitialQuantityInput = document.getElementById('productInitialQuantity');
+        const productsTableBody = document.getElementById('productsTableBody');
+        const clearProductFormBtn = document.getElementById('clearProductForm');
+
+        // Fetch and display products
+        async function fetchProducts() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products`);
+                const products = await response.json();
+                productsTableBody.innerHTML = ''; // Clear existing rows
+                if (products.length === 0) {
+                    productsTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-500">No products found. Add a new product above.</td></tr>';
+                    return;
+                }
+                products.forEach(product => {
+                    const row = productsTableBody.insertRow();
+                    row.innerHTML = `
+                        <td class="px-4 py-2">${product.id}</td>
+                        <td class="px-4 py-2">${product.name}</td>
+                        <td class="px-4 py-2">${product.description || '-'}</td>
+                        <td class="px-4 py-2">$${product.price.toFixed(2)}</td>
+                        <td class="px-4 py-2">
+                            <button class="btn btn-secondary btn-sm mr-2" onclick="editProduct(${product.id}, '${product.name}', '${product.description}', ${product.price}, ${product.initial_quantity})">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})">Delete</button>
+                        </td>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                showMessage('Failed to load products.', 'error');
+            }
+        }
+
+        // Handle product form submission (Add/Update)
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = productIdInput.value;
+            const name = productNameInput.value;
+            const description = productDescriptionInput.value;
+            const price = parseFloat(productPriceInput.value);
+            const initial_quantity = parseInt(productInitialQuantityInput.value);
+
+            const productData = { name, description, price, initial_quantity };
+
+            try {
+                let response;
+                if (id) {
+                    // Update existing product
+                    response = await fetch(`${API_BASE_URL}/products/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(productData)
+                    });
+                } else {
+                    // Add new product
+                    response = await fetch(`${API_BASE_URL}/products`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(productData)
+                    });
+                }
+
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage(result.message);
+                    productForm.reset();
+                    productIdInput.value = ''; // Clear hidden ID
+                    fetchProducts(); // Refresh the list
+                } else {
+                    showMessage(result.error || 'An error occurred.', 'error');
+                }
+            } catch (error) {
+                console.error('Error submitting product form:', error);
+                showMessage('Failed to connect to the server.', 'error');
+            }
+        });
+
+        // Populate form for editing
+        function editProduct(id, name, description, price, initial_quantity) {
+            productIdInput.value = id;
+            productNameInput.value = name;
+            productDescriptionInput.value = description;
+            productPriceInput.value = price;
+            productInitialQuantityInput.value = initial_quantity;
+            showMessage('Editing product. Modify details and click "Add/Update Product".', 'info');
+        }
+
+        // Delete product
+        async function deleteProduct(id) {
+            if (!confirm('Are you sure you want to delete this product?')) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage(result.message);
+                    fetchProducts();
+                } else {
+                    showMessage(result.error || 'An error occurred.', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                showMessage('Failed to connect to the server.', 'error');
+            }
+        }
+
+        // Clear product form
+        clearProductFormBtn.addEventListener('click', () => {
+            productForm.reset();
+            productIdInput.value = '';
+            showMessage('', 'success'); // Clear messages
+        });
+
+
+        // --- Inventory Management ---
+        const inventoryForm = document.getElementById('inventoryForm');
+        const inventoryProductIdSelect = document.getElementById('inventoryProductId');
+        const inventoryBatchNumberInput = document.getElementById('inventoryBatchNumber');
+        const inventoryQuantityInput = document.getElementById('inventoryQuantity');
+        const inventoryTableBody = document.getElementById('inventoryTableBody');
+
+        // Fetch products for inventory dropdown
+        async function fetchProductsForInventory() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products`);
+                const products = await response.json();
+                inventoryProductIdSelect.innerHTML = '<option value="">Select a product</option>';
+                products.forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product.id;
+                    option.textContent = product.name;
+                    inventoryProductIdSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching products for inventory dropdown:', error);
+                showMessage('Failed to load products for inventory.', 'error');
+            }
+        }
+
+        // Fetch and display inventory
+        async function fetchInventory() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/inventory`);
+                const inventory = await response.json();
+                inventoryTableBody.innerHTML = ''; // Clear existing rows
+                if (inventory.length === 0) {
+                    inventoryTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-500">No inventory items found. Add stock using the form above.</td></tr>';
+                    return;
+                }
+                inventory.forEach(item => {
+                    const row = inventoryTableBody.insertRow();
+                    row.innerHTML = `
+                        <td class="px-4 py-2">${item.id}</td>
+                        <td class="px-4 py-2">${item.product_name}</td>
+                        <td class="px-4 py-2">${item.batch_number}</td>
+                        <td class="px-4 py-2">${item.quantity}</td>
+                        <td class="px-4 py-2">
+                            <button class="btn btn-danger btn-sm" onclick="deleteInventoryBatch(${item.id})">Delete Batch</button>
+                        </td>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error fetching inventory:', error);
+                showMessage('Failed to load inventory.', 'error');
+            }
+        }
+
+        // Handle inventory form submission
+        inventoryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const product_id = inventoryProductIdSelect.value;
+            const batch_number = inventoryBatchNumberInput.value;
+            const quantity = parseInt(inventoryQuantityInput.value);
+
+            if (!product_id) {
+                showMessage('Please select a product.', 'error');
+                return;
+            }
+
+            const inventoryData = { product_id: parseInt(product_id), batch_number, quantity };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/inventory`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(inventoryData)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage(result.message);
+                    inventoryForm.reset();
+                    fetchInventory(); // Refresh the list
+                } else {
+                    showMessage(result.error || 'An error occurred.', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating inventory:', error);
+                showMessage('Failed to connect to the server.', 'error');
+            }
+        });
+
+        // Delete inventory batch
+        async function deleteInventoryBatch(id) {
+            if (!confirm('Are you sure you want to delete this inventory batch? This will remove all stock for this batch.')) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/inventory/${id}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage(result.message);
+                    fetchInventory();
+                } else {
+                    showMessage(result.error || 'An error occurred.', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting inventory batch:', error);
+                showMessage('Failed to connect to the server.', 'error');
+            }
+        }
+
+        // --- Billing System ---
+        const billingForm = document.getElementById('billingForm');
+        const customerNameInput = document.getElementById('customerName');
+        const billItemsContainer = document.getElementById('billItemsContainer');
+        const addBillItemBtn = document.getElementById('addBillItem');
+        const billDiscountInput = document.getElementById('billDiscount');
+        const billTaxRateInput = document.getElementById('billTaxRate');
+        const billsTableBody = document.getElementById('billsTableBody');
+
+        let billItemIndex = 0; // To keep track of dynamic item rows
+
+        // Fetch products for billing dropdowns
+        async function fetchProductsForBilling() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products`);
+                const products = await response.json();
+                // Store products globally or pass them to addBillItemRow
+                window.availableProducts = products; // Make products available globally for dropdowns
+                updateBillProductSelects(); // Update all existing selects
+
+                // Also update the initial select if it exists
+                const initialSelect = document.getElementById('billProduct0');
+                if (initialSelect) {
+                    initialSelect.innerHTML = '<option value="">Select Product</option>';
+                    products.forEach(product => {
+                        const option = document.createElement('option');
+                        option.value = product.id;
+                        option.textContent = `${product.name} ($${product.price.toFixed(2)})`;
+                        initialSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching products for billing dropdown:', error);
+                showMessage('Failed to load products for billing.', 'error');
+            }
+        }
+
+        function updateBillProductSelects() {
+            document.querySelectorAll('.bill-product-select').forEach(selectElement => {
+                const currentProductId = selectElement.value; // Preserve current selection
+                selectElement.innerHTML = '<option value="">Select Product</option>';
+                if (window.availableProducts) {
+                    window.availableProducts.forEach(product => {
+                        const option = document.createElement('option');
+                        option.value = product.id;
+                        option.textContent = `${product.name} ($${product.price.toFixed(2)})`;
+                        selectElement.appendChild(option);
+                    });
+                }
+                selectElement.value = currentProductId; // Restore selection
+            });
+        }
+
+
+        // Add a new item row to the billing form
+        addBillItemBtn.addEventListener('click', () => {
+            billItemIndex++;
+            const newItemHtml = `
+                <div class="flex flex-col md:flex-row gap-4 mb-4 bill-item">
+                    <div class="w-full md:w-3/5">
+                        <label for="billProduct${billItemIndex}" class="sr-only">Product</label>
+                        <select id="billProduct${billItemIndex}" class="w-full p-2 border rounded-md bill-product-select" data-item-index="${billItemIndex}" required>
+                            <option value="">Select Product</option>
+                            <!-- Products loaded here by JS -->
+                        </select>
+                    </div>
+                    <div class="w-full md:w-1/5">
+                        <label for="billQuantity${billItemIndex}" class="sr-only">Quantity</label>
+                        <input type="number" id="billQuantity${billItemIndex}" min="1" value="1" class="w-full p-2 border rounded-md bill-quantity-input" data-item-index="${billItemIndex}" required>
+                    </div>
+                    <div class="w-full md:w-1/5 flex items-center justify-end">
+                        <button type="button" class="btn btn-danger remove-item-btn" data-item-index="${billItemIndex}">Remove</button>
+                    </div>
+                </div>
+            `;
+            billItemsContainer.insertAdjacentHTML('beforeend', newItemHtml);
+            updateBillProductSelects(); // Populate the new select element
+        });
+
+        // Handle removing bill items (event delegation)
+        billItemsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-item-btn')) {
+                const itemIndexToRemove = e.target.dataset.itemIndex;
+                const itemToRemove = document.querySelector(`.bill-item[data-item-index="${itemIndexToRemove}"]`);
+                if (itemToRemove) {
+                    // Ensure at least one item remains
+                    if (billItemsContainer.querySelectorAll('.bill-item').length > 1) {
+                        itemToRemove.remove();
+                    } else {
+                        showMessage('You must have at least one item on the bill.', 'error');
+                    }
+                }
+            }
+        });
+
+
+        // Handle bill generation
+        billingForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const customer_name = customerNameInput.value;
+            const discount = parseFloat(billDiscountInput.value || 0);
+            const tax_rate = parseFloat(billTaxRateInput.value || 0);
+
+            const items = [];
+            document.querySelectorAll('.bill-item').forEach(itemDiv => {
+                const productId = itemDiv.querySelector('.bill-product-select').value;
+                const quantity = itemDiv.querySelector('.bill-quantity-input').value;
+                if (productId && quantity && parseInt(quantity) > 0) {
+                    items.push({ product_id: parseInt(productId), quantity: parseInt(quantity) });
+                }
+            });
+
+            if (items.length === 0) {
+                showMessage('Please add at least one item to the bill.', 'error');
+                return;
+            }
+
+            const billData = { customer_name, items, discount, tax_rate };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/bill`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(billData)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage(result.message + ` Total: $${result.total_amount.toFixed(2)}`);
+                    billingForm.reset();
+                    // Reset bill items to one empty row
+                    billItemsContainer.innerHTML = `
+                        <div class="flex flex-col md:flex-row gap-4 mb-4 bill-item">
+                            <div class="w-full md:w-3/5">
+                                <label for="billProduct0" class="sr-only">Product</label>
+                                <select id="billProduct0" class="w-full p-2 border rounded-md bill-product-select" data-item-index="0" required>
+                                    <option value="">Select Product</option>
+                                </select>
+                            </div>
+                            <div class="w-full md:w-1/5">
+                                <label for="billQuantity0" class="sr-only">Quantity</label>
+                                <input type="number" id="billQuantity0" min="1" value="1" class="w-full p-2 border rounded-md bill-quantity-input" data-item-index="0" required>
+                            </div>
+                            <div class="w-full md:w-1/5 flex items-center justify-end">
+                                <button type="button" class="btn btn-danger remove-item-btn" data-item-index="0" disabled>Remove</button>
+                            </div>
+                        </div>
+                    `;
+                    billItemIndex = 0;
+                    fetchProductsForBilling(); // Re-populate dropdowns
+                    fetchBills(); // Refresh the bills list
+                } else {
+                    showMessage(result.error || 'An error occurred.', 'error');
+                }
+            } catch (error) {
+                console.error('Error generating bill:', error);
+                showMessage('Failed to connect to the server.', 'error');
+            }
+        });
+
+        // Fetch and display bills
+        async function fetchBills() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/bills`);
+                const bills = await response.json();
+                billsTableBody.innerHTML = ''; // Clear existing rows
+                if (bills.length === 0) {
+                    billsTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-500">No bills generated yet.</td></tr>';
+                    return;
+                }
+                bills.forEach(bill => {
+                    const row = billsTableBody.insertRow();
+                    const itemsHtml = bill.items.map(item =>
+                        `<li>${item.product_name} (x${item.quantity}) - $${item.price_at_purchase.toFixed(2)} each</li>`
+                    ).join('');
+
+                    row.innerHTML = `
+                        <td class="px-4 py-2">${bill.id}</td>
+                        <td class="px-4 py-2">${bill.customer_name}</td>
+                        <td class="px-4 py-2">${new Date(bill.bill_date).toLocaleString()}</td>
+                        <td class="px-4 py-2 font-bold">$${bill.total_amount.toFixed(2)}</td>
+                        <td class="px-4 py-2">${(bill.discount * 100).toFixed(0)}%</td>
+                        <td class="px-4 py-2">${(bill.tax * 100).toFixed(0)}%</td>
+                        <td class="px-4 py-2"><ul>${itemsHtml}</ul></td>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error fetching bills:', error);
+                showMessage('Failed to load bills.', 'error');
+            }
+        }
+
+        // Initial load when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLoginStatus(); // Check login status on page load
+        });
+    </script>
+</body>
+</html>
